@@ -17,16 +17,15 @@ We have also included
   1. Full dates are formatted as `dd-mm-yyyy`
   2. Month year as `jan-2015`
   3. Week year as `01-2015`
-4. Week numbering started on
+4. Week numbering starts on the first week that has 4 or more days inside the current year
 
 
 ## Process for adding new data
 
-* Data needs to join othere data sets by date or by geographical location. Any new data set therefore must have a column that contains values that are to be found in one of the columns of the `date_hierarchy` table or one of the columsn of any of the `geo_hierarchy` tables or both.
+* Data needs to join other data sets by date or by geographical location. Any new data set therefore must have a column that contains values that are to be found in one of the columns of the `date_hierarchy` table or one of the columsn of any of the `geo_hierarchy` tables or both.
 * Only import columns that have an obvious use (to avoid being swamped by data) and avoid duplicating information
 * Include the source of the data in the metadata 
 
-* Melted data sets
 
 
 ## Types of table
