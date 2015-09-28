@@ -19,6 +19,11 @@ We have also included
   3. Week year as `01-2015`
 4. Week numbering starts on the first week that has 4 or more days inside the current year
 
+## Not essential but preferred
+
+1. Count measures start with `num_`
+2. Percentage measures start with `pct_`
+
 
 ## Process for adding new data
 
