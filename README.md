@@ -62,7 +62,7 @@ install.packages("devtools")
 And the download and install from github
 
 ```
-install_github("coppeliamla/geouk/geoukr")
+install_github("coppeliaMLA/geouk", subdir = "geoukr")
 ```
 
 
