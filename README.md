@@ -34,7 +34,7 @@ Unless they are hard to find we haven't provided the open data sets themselves (
 * Only import columns that have an obvious use (to avoid being swamped by data) and avoid duplicating information
 * Include the source of the data in the metadata 
 
-!()[images/addingNewTables.png]
+![](images/addingNewTables.png)
 
 ## Types of table
 
