@@ -15,7 +15,7 @@ add_data_to_shapes<-function(shapes, data, by){
 #' Creates the data for a UK ward map by appending a ward level dataset to the ward shapes
 #'
 #' @param ward_data A ward level data set. This must contain a column called CMWD11CD that contains the ONS census merged ward codes and a column called value which contains the statistic to be mapped.
-#' @param points TBC
+#' @param points An optional data frame containing the co-ordinates and labels of points that you may want to plot on the map
 #' @return Returns an object of class uk_ward_map containing the ward_shapes with the data appended and the la_shapes
 #' @author Simon Raper
 #' @examples

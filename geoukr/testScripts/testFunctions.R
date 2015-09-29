@@ -14,6 +14,8 @@ administrative_geo_hierarchy<-merge(geo_hierarchy, wards_to_cmw[,c(1,4,5)], by.x
 names(administrative_geo_hierarchy)[11:12]<-c("cm_ward_code", "cm_ward_name")
 admin_geo_hierarchy<-administrative_geo_hierarchy[,c("ward_code", "ward_name", "cm_ward_code", "cm_ward_name", "local_authority_code", "local_authority_name", "county_code", "county_name", "region_code", "region_name", "country_code", "country_name")]
 
+write.csv(admin_geo_hierarchy, file="~/Documents/CodeRepos/geouk/openDataSources/hierarchyTables/admin_geo_hierarchy.csv")
+
 save(admin_geo_hierarchy, file="~/Documents/CodeRepos/geouk/geoukr/data/admin_geo_hierarchy.RData")
 
 save(household_deprivation_3d, file="~/Documents/CodeRepos/geouk/geoukr/data/household_deprivation_3d.RData")
