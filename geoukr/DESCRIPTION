@@ -1,0 +1,11 @@
+Package: geoukr
+Type: Package
+Title: Tools for mapping and analysing UK geospatial data
+Version: 0.1
+Date: 2015-09-29
+Author: Simon Raper
+Maintainer: <simon@coppelia.io>
+Description: We created this repository while working on project analysing food bank data provided by the Trussell Trust. We (The University of Hull, Coppelia and AAM associates) found we needed some common standards in order to collaborate when working with the hundreds of open geospatial data sets that are available online. Once we had an agreement on what the data should look like it was much easier to put together some tools that provide standard views on it (maps, time series plots etc).
+License: What license is it under?
+LazyData: TRUE
+Depends: reshape2, ggplot2, lubridate, zoo, plyr, rgdal, RColorBrewer, sp, GISTools, classInt, maptools
