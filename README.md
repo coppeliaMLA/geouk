@@ -2,14 +2,18 @@
 
 We created this repository while working on project analysing food bank data provided by the Trussell Trust. We (The University of Hull, Coppelia and AAM associates) found we needed some common standards in order to collaborate when working with the hundreds of open geospatial data sets that are available online.
 
-Once we have an agreement on what the data should look like it is much easier to put together some tools that provide standard views on it (maps, time series plots etc). These tools include
+Once we had an agreement on what the data should look like it was much easier to put together some tools that provide standard views on it (maps, time series plots etc). These tools include
 
 1. geoukr, an r package for produce maps and time series plots of the data
 2. Javascript code to create a browser based tool that allows the user to explore maps of the data
 3. The SQL to create a mySQL database from the csv files
 4. python code for downloading various open source data sets
 
-Unless they are hard to find we haven't provided the open data sets themselves (that would just duplicate what already exists) but rather useful transformations of them and tables that we used to link them together. 
+Unless they are hard to find we haven't provided the open data sets themselves (that would just duplicate what already exists) but rather 
+
+1. Code that downloads the datasets
+2. Useful transformations of the datasets (or the code to make those transformations if the data sets are too large to add to the repository.
+3. The tables that we used to link them together. 
 
 
 ## Conventions for our data
@@ -34,19 +38,32 @@ Unless they are hard to find we haven't provided the open data sets themselves (
 * Only import columns that have an obvious use (to avoid being swamped by data) and avoid duplicating information
 * Include the source of the data in the metadata 
 
-
+![](images/AddingNewTables.png)
 
 ## Types of table
 
 1. Hierarchy tables (includes the `date_hierarchy` table which maps date to useful longer time periods and the `geo_hierarchy` tables which include 
   1. `postal_geo_hierarchy`
   2. `electoral_geo_hierarchy`
-  3. `administrative_geo_hierarchy`
+  3. `admin_geo_hierarchy`
 2. Bridge tables
 3. Metadata tables
 
+## Installing the geoukr r package
 
+The package is not yet on cran but can be installed via devtools
 
+Install devtools if you do not have it already
+
+```
+install.packages("devtools")
+```
+
+And the download and install from github
+
+```
+install_github("coppeliamla/geouk/geoukr")
+```
 
 
 
