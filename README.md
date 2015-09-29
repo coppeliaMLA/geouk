@@ -4,7 +4,7 @@ We created this repository while working on project analysing food bank data pro
 
 Once we have an agreement on what the data should look like it is much easier to put together some tools that provide standard views on it (maps, time series plots etc). These tools include
 
-1. geoukr, an r packaege for produce maps and time series plots of the data
+1. geoukr, an r package for produce maps and time series plots of the data
 2. Javascript code to create a browser based tool that allows the user to explore maps of the data
 3. The SQL to create a mySQL database from the csv files
 4. python code for downloading various open source data sets
