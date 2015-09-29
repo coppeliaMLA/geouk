@@ -4,12 +4,10 @@
 \alias{uk_ward_map}
 \title{Creates the data for a UK ward map by appending a ward level dataset to the ward shapes}
 \usage{
-uk_ward_map(ward_data, shapes_dir, points = NULL)
+uk_ward_map(ward_data, points = NULL)
 }
 \arguments{
 \item{ward_data}{A ward level data set. This must contain a column called CMWD11CD that contains the ONS census merged ward codes and a column called value which contains the statistic to be mapped.}
-
-\item{shapes_dir}{The local directory containing the shape files for census merged wards and local authorities. Please see instructions on the geouk github repo for instruction on how to obtain these file. The ward shapes must be placed in a subdirectory called wardShapes and the local authority shapes in a subdirectory called laShapes.}
 
 \item{points}{TBC}
 }
@@ -21,7 +19,7 @@ Creates the data for a UK ward map by appending a ward level dataset to the ward
 }
 \examples{
 data(household_deprivation_3d)
-dep_map<-uk_ward_map(household_deprivation_3d, "/Users/simon/Documents/CodeRepos/trussell/opendata/mapShapes")
+dep_map<-uk_ward_map(household_deprivation_3d)
 }
 \author{
 Simon Raper

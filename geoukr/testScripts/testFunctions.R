@@ -18,4 +18,10 @@ save(admin_geo_hierarchy, file="~/Documents/CodeRepos/geouk/geoukr/data/admin_ge
 
 save(household_deprivation_3d, file="~/Documents/CodeRepos/geouk/geoukr/data/household_deprivation_3d.RData")
 
+save(ward_shapes, file="~/Documents/CodeRepos/geouk/geoukr/data/ward_shapes.RData")
+
+save(la_shapes, file="~/Documents/CodeRepos/geouk/geoukr/data/la_shapes.RData")
+
+ward_shapes
+
 length(unique(geo_hierarchy$ward_code))

@@ -15,25 +15,24 @@ add_data_to_shapes<-function(shapes, data, by){
 #' Creates the data for a UK ward map by appending a ward level dataset to the ward shapes
 #'
 #' @param ward_data A ward level data set. This must contain a column called CMWD11CD that contains the ONS census merged ward codes and a column called value which contains the statistic to be mapped.
-#' @param shapes_dir The local directory containing the shape files for census merged wards and local authorities. Please see instructions on the geouk github repo for instruction on how to obtain these file. The ward shapes must be placed in a subdirectory called wardShapes and the local authority shapes in a subdirectory called laShapes.
 #' @param points TBC
 #' @return Returns an object of class uk_ward_map containing the ward_shapes with the data appended and the la_shapes
 #' @author Simon Raper
 #' @examples
 #'
 #' data(household_deprivation_3d)
-#' dep_map<-uk_ward_map(household_deprivation_3d, "/Users/simon/Documents/CodeRepos/trussell/opendata/mapShapes")
+#' dep_map<-uk_ward_map(household_deprivation_3d)
 #'
 #' @export
 
 
-uk_ward_map<-function(ward_data, shapes_dir, points = NULL) {
+uk_ward_map<-function(ward_data, points = NULL) {
 
   #Load in the ward shapes
-  ward_shapes <- readOGR(paste0(shapes_dir, "/wardShapes"), "CMWD_2011_EW_BGC")
+  data("ward_shapes")
 
   #Load in the LA shapes
-  la_shapes <- readOGR(paste0(shapes_dir, "/laShapes"), "LAD_DEC_2012_GB_BFE")
+  data("la_shapes")
 
   #Join regions to the shapes
   data(admin_geo_hierarchy)
@@ -61,7 +60,7 @@ uk_ward_map<-function(ward_data, shapes_dir, points = NULL) {
 #' @examples
 #'
 #' data(household_deprivation_3d)
-#' dep_map<-uk_ward_map(household_deprivation_3d, "/Users/simon/Documents/CodeRepos/trussell/opendata/mapShapes")
+#' dep_map<-uk_ward_map(household_deprivation_3d)
 #' ward_map_by_region("London", dep_map)
 #' @export
 
@@ -92,11 +91,3 @@ ward_map_by_region<-function(region, uk_ward_map){
   title(region)
 }
 
-#Examples
-
-
-#uk_ward_map<-function(ward_data, "~/Users/simon/Documents/CodeRepos/trussell/opendata/mapShapes/", points = NULL)
-
-#geo_hierarchy <- read.csv("~/Documents/CodeRepos/trussell/opendata/2011Census/2011CensusDownloads/geoLookups/CTRY14_RGN14_CTY14_LAD14_WD14_UK_LU.csv", stringsAsFactors=FALSE)
-#names(geo_hierarchy)<-c("ward_code", "ward_name", "local_authority_code", "local_authority_name", "county_code", "county_name", "region_code", "region_name", "country_code", "country_name")
-#save(geo_hierarchy, file="~/Documents/CodeRepos/geouk/geoukr/data/geo_hierarchy.RData")

@@ -16,7 +16,7 @@ Plots a map for just one region of a uk ward map object
 }
 \examples{
 data(household_deprivation_3d)
-dep_map<-uk_ward_map(household_deprivation_3d, "/Users/simon/Documents/CodeRepos/trussell/opendata/mapShapes")
+dep_map<-uk_ward_map(household_deprivation_3d)
 ward_map_by_region("London", dep_map)
 }
 \author{
