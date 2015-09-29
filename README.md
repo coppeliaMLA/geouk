@@ -32,11 +32,20 @@ Unless they are hard to find we haven't provided the open data sets themselves (
 2. Percentage measures start with `pct_`
 
 
-## Process for adding new data
+## Process for adding new data (should aim to make this like `brew` i.e. using formulas) 
 
-* Data needs to join other data sets by date or by geographical location. Any new data set therefore must have a column that contains values that are to be found in one of the columns of the `date_hierarchy` table or one of the columsn of any of the `geo_hierarchy` tables or both.
-* Only import columns that have an obvious use (to avoid being swamped by data) and avoid duplicating information
-* Include the source of the data in the metadata 
+1. Create a new markdown file from the openDataSources.md markdown template
+2. Where appropriate complete sections for
+  1. Source
+  2. Extraction code
+2. Data needs to join other data sets by date or by geographical location. Any new data set therefore must have a column that contains values that are to be found in one of the columns of the `date_hierarchy` table or one of the columns of any of the `geo_hierarchy` tables or both. Create your code (in python or R) for transforming the data into the required format and paste it into the transformation code section of the markdown file. When constructing the code please work to the following principles
+  1. Only import columns that have an obvious use (to avoid being swamped by data) and avoid duplicating information
+  2. Ensure that column names and file meet our conventions for data
+3. Do not save the data itself within the repository. By running your code any user should be able to pull down the data for themselves.
+4. Save your markdown file within openDataSources
+
+That's it. You should now be able to use your data in our package along with any of the other data sets.
+
 
 ![](images/AddingNewTables.png)
 
