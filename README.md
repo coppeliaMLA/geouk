@@ -45,7 +45,7 @@ Unless they are hard to find we haven't provided the open data sets themselves (
 1. Hierarchy tables (includes the `date_hierarchy` table which maps date to useful longer time periods and the `geo_hierarchy` tables which include 
   1. `postal_geo_hierarchy`
   2. `electoral_geo_hierarchy`
-  3. `administrative_geo_hierarchy`
+  3. `admin_geo_hierarchy`
 2. Bridge tables
 3. Metadata tables
 
