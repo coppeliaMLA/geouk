@@ -49,8 +49,21 @@ Unless they are hard to find we haven't provided the open data sets themselves (
 2. Bridge tables
 3. Metadata tables
 
+## Installing the geoukr r package
 
+The package is not yet on cran but can be installed via devtools
 
+Install devtools if you do not have it already
+
+```
+install.packages("devtools")
+```
+
+And the download and install from github
+
+```
+install_github("coppeliamla/geouk/geoukr")
+```
 
 
 
