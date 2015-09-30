@@ -73,10 +73,11 @@ And the download and install from github
 install_github("coppeliaMLA/geouk", subdir = "geoukr")
 ```
 
-Note that rgeos requires geos so you'll need to install that too. If you are using a mac then can easily be done via brew
+Note that rgeos requires geos and rgdal requires gdal so you'll need to install these too. If you are using a mac then can easily be done via brew
 
 ```
 brew install geos
+brew install gdal
 ```
 
 
