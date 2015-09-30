@@ -6,7 +6,7 @@ Once we had an agreement on what the data should look like it was much easier to
 
 1. geoukr, an r package for produce maps and time series plots of the data
 2. Javascript code to create a browser based tool that allows the user to explore maps of the data
-3. The SQL to create a mySQL database from the csv files
+3. the SQL to create a mySQL database from the csv files
 4. python code for downloading various open source data sets
 
 Unless they are hard to find we haven't provided the open data sets themselves (that would just duplicate what already exists) but rather 
