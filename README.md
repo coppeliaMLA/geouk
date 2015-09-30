@@ -6,7 +6,7 @@ Once we had an agreement on what the data should look like it was much easier to
 
 1. geoukr, an r package for produce maps and time series plots of the data
 2. Javascript code to create a browser based tool that allows the user to explore maps of the data
-3. The SQL to create a mySQL database from the csv files
+3. the SQL to create a mySQL database from the csv files
 4. python code for downloading various open source data sets
 
 Unless they are hard to find we haven't provided the open data sets themselves (that would just duplicate what already exists) but rather 
@@ -21,10 +21,9 @@ Unless they are hard to find we haven't provided the open data sets themselves (
 1. All tables and column names use `lower_case_with_underscores`
 2. All file names use `mixedCase`
 3. When stored in flat files
-  1. Full dates are formatted as `dd-mm-yyyy`
-  2. Month year as `jan-2015`
-  3. Week year as `01-2015`
-4. Week numbering starts on the first week that has 4 or more days inside the current year
+  1. Full dates are formatted as `yyyy-mm-dd`
+  2. Monthly data is labelled using the first day of the month. e.g. January 2007 would be stored as `2007-01-01`
+  3. Likewise weekly data is labelled using the first day of the week (the first day being Monday)
 
 ## Not essential but preferred
 
@@ -74,6 +73,12 @@ And the download and install from github
 install_github("coppeliaMLA/geouk", subdir = "geoukr")
 ```
 
+Note that rgeos requires geos and rgdal requires gdal so you'll need to install these too. If you are using a mac then can easily be done via brew
+
+```
+brew install geos
+brew install gdal
+```
 
 
 
