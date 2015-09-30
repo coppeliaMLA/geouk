@@ -21,9 +21,9 @@ Unless they are hard to find we haven't provided the open data sets themselves (
 1. All tables and column names use `lower_case_with_underscores`
 2. All file names use `mixedCase`
 3. When stored in flat files
-  1. Full dates are formatted as `dd-mm-yyyy`
-  2. Month year as `jan-2015`
-  3. Week year as `01-2015`
+  1. Full dates are formatted as `yyyy-mm-dd`
+  2. Month year as `yyyy-mm`
+  3. Week year as `yyyy-ww`
 4. Week numbering starts on the first week that has 4 or more days inside the current year
 
 ## Not essential but preferred
