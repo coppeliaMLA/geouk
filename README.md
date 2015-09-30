@@ -22,7 +22,7 @@ Unless they are hard to find we haven't provided the open data sets themselves (
 2. All file names use `mixedCase`
 3. When stored in flat files
   1. Full dates are formatted as `yyyy-mm-dd`
-  2. Monthly data is labelled using the first day of the mont. e.g. January 2007 would be stored as `2007-01-01`
+  2. Monthly data is labelled using the first day of the month. e.g. January 2007 would be stored as `2007-01-01`
   3. Likewise weekly data is labelled using the first day of the week (the first day being Monday)
 
 ## Not essential but preferred
