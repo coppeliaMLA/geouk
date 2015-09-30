@@ -7,9 +7,9 @@
 uk_ward_map(ward_data, points = NULL)
 }
 \arguments{
-\item{ward_data}{A ward level data set. This must contain a column called CMWD11CD that contains the ONS census merged ward codes and a column called value which contains the statistic to be mapped.}
+\item{ward_data}{A ward level data set. This must contain a column called cm_ward_code that contains the ONS census merged ward codes and a column called value which contains the statistic to be mapped.}
 
-\item{points}{TBC}
+\item{points}{An optional data frame containing the co-ordinates and labels of points that you may want to plot on the map}
 }
 \value{
 Returns an object of class uk_ward_map containing the ward_shapes with the data appended and the la_shapes

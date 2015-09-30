@@ -4,7 +4,7 @@
 \alias{add_data_to_shapes}
 \title{Add data to shapes}
 \usage{
-add_data_to_shapes(shapes, data, by)
+add_data_to_shapes(shapes, data, by.x, by.y)
 }
 \arguments{
 \item{shapes}{A SpatialPolygonsDataFrame as generated using the SP package}
