@@ -4,7 +4,7 @@
 \alias{ward_map_by_region}
 \title{Plots a map for just one region of a uk ward map object}
 \usage{
-ward_map_by_region(region, uk_ward_map, map_title = NULL)
+ward_map_by_region(region, uk_ward_map, breaks, map_title = NULL)
 }
 \arguments{
 \item{region}{The name of the region. Possible values are: London, North West, Yorkshire and The Humber, North East, West Midlands, East Midlands, South West, East of England, South East}

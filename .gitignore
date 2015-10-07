@@ -1,3 +1,4 @@
 *.DS_Store
-
+geoukr/.RData
+geoukr/.Rhistory
 .Rproj.user
