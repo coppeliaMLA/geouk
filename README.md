@@ -48,6 +48,10 @@ That's it. You should now be able to use your data in our package along with any
 
 ![](images/AddingNewTables.png)
 
+##List of sources
+
+1. [ONS quick statistics](/openDataSources/openDataRecipes/ONSQuickStatistics.md) 
+
 ## Types of table
 
 1. Hierarchy tables (includes the `date_hierarchy` table which maps date to useful longer time periods and the `geo_hierarchy` tables which include 
