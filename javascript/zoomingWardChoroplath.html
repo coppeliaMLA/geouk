@@ -114,8 +114,8 @@
 
     //Set up the queue
     queue()
-      .defer(d3.json, "ukWards.json")
-      .defer(d3.csv, "fedPerHead.csv", function(d) {
+      .defer(d3.json, "data/open/ukWards.json")
+      .defer(d3.csv, "data/trussell/fedPerHead.csv", function(d) {
         by_id.set(d.cm_ward_code, +d.value);
       })
       .await(ready);

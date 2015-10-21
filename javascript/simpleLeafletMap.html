@@ -7,6 +7,10 @@
     height: 1000px;
   }
 
+  .foodbank{
+    fill: #FB6A4A;
+  }
+
   .ward {
     fill: white;
     opacity: 0.7;
@@ -47,6 +51,36 @@
   .q8-9 {
     fill: rgb(8, 48, 107);
   }
+
+  .d3-tip {
+      font: 10px sans-serif;
+      line-height: 130%;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #FB6A4A;
+      border-radius: 2px;
+  }
+  /* Creates a small triangle extender for the tooltip */
+
+  .d3-tip:after {
+      box-sizing: border-box;
+      display: inline;
+      font-size: 10px;
+      width: 100%;
+      line-height: 1;
+      color: #000;
+      content: "\25BC";
+      position: absolute;
+      text-align: center;
+  }
+  /* Style northward tooltips differently */
+
+  .d3-tip.n:after {
+      margin: -1px 0 0 0;
+      top: 100%;
+      left: 0;
+  }
+
 </style>
 
 <body>
@@ -54,9 +88,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
+  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
   <p id="map"></p>
   <script>
-
     //Set up map (in the array sense) to hold ward data
     var by_id = d3.map();
 
@@ -71,6 +105,16 @@
     var svg = d3.select(map.getPanes().overlayPane).append("svg"),
       g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
+    //Set up the tool tip
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([0, 0])
+        .html(function(d, i) {
+          return (d.properties.name);
+        });
+
+    g.call(tip);
+
     //Set up the scales
     var quantize = d3.scale.quantize()
       .domain([0, 0.09])
@@ -78,9 +122,32 @@
         return "q" + i + "-9";
       }));
 
+    //Set up an array to hold the foobank data
+    var foodbank_data = new Array();
+    var ward_data = new Array();
+
     //Set up the queue
     queue()
       .defer(d3.json, "data/open/ukWards.json")
+      .defer(d3.csv, "data/trussell/predActual.csv", function(d) {
+        ward_data.push({
+          cm_ward_code: d. cm_ward_code,
+          predicted_need: d.predicted,
+          actual_use:  d.actual
+        });
+      })
+      .defer(d3.csv, "data/trussell/foodBanks.csv", function(d) {
+        foodbank_data.push({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [+d.Longitude, +d.Latitude]
+          },
+          properties: {
+            name: d.foodbank_name
+          }
+        });
+      })
       .defer(d3.csv, "data/trussell/fedPerHead.csv", function(d) {
         by_id.set(d.cm_ward_code, +d.value);
       })
@@ -99,18 +166,43 @@
       //Convert the ward json objects
       var wards = topojson.feature(uk, uk.objects.wards);
 
+      /*Function to search the ward data
+
+      function search_ward(key, attribute){
+
+        for ()
+
+      }
+      */
+
+
       //Add the ward shapes
       var feature = g.selectAll("path")
         .data(wards.features)
         .enter().append("path")
         .attr("class", function(d) {
           if (by_id.get(d.id)) {
-            return "ward "+ quantize(by_id.get(d.id));
+            return "ward " + quantize(by_id.get(d.id));
           } else {
             return ("ward");
           }
 
         });
+
+      //Add the foodBanks
+      var foodbanks = foodbank_data;
+
+      var foodbank_feature = g.selectAll(".foodbank")
+        .data(foodbanks)
+        .enter().append("path")
+        .attr("class", "foodbank")
+        .on('mouseover', tip.show)
+        .on('mouseout', tip.hide);
+
+
+      var location_point = d3.geo.path()
+        .projection(transform)
+        .pointRadius(3.5);
 
       map.on("viewreset", reset);
       reset();
@@ -129,6 +221,7 @@
         g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
 
         feature.attr("d", path);
+        foodbank_feature.attr("d", location_point);
       }
 
       // Use Leaflet to implement a D3 geometric transformation.

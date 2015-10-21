@@ -15,7 +15,7 @@
       .attr("width", width)
       .attr("height", height);
 
-    d3.json("ukWards.json", function(error, uk) {
+    d3.json("data/open/ukWards.json", function(error, uk) {
       if (error) return console.error(error);
 
       var wards = topojson.feature(uk, uk.objects.wards);
