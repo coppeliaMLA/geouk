@@ -5,7 +5,7 @@
 This data was was downloaded from [here](http://www.nomisweb.co.uk/census/2011/quick_statistics)
 
 
-## Extraction code (if code was use to extract the data)
+## Extraction code
 
 I extracted the data using the following python code:
 
