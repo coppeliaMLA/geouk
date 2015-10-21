@@ -1,0 +1,17 @@
+ogr2ogr \
+  -f GeoJSON \
+  -where "ISO_A2 = 'GB' AND SCALERANK < 8" \
+  places.json \
+  ne_10m_populated_places.shp
+
+ogr2ogr newCoords.shp CMWD_2011_EW_BGC.shp -t_srs "+proj=longlat +ellps=WGS84 +no_defs +towgs84=0,0,0"
+rm wards.json
+ogr2ogr   -f GeoJSON   -lco COORDINATE_PRECISION=5 -simplify 0.001   wards.json   newCoords.shp
+cp wards.json /Users/simon/Documents/CodeRepos/geouk/javascript/wards.json
+topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/ukWards.json /Users/simon/Documents/CodeRepos/geouk/javascript/wards.json /Users/simon/Documents/CodeRepos/geouk/javascript/places.json --id-property CMWD11CD --properties name=NAME
+
+
+#Variants
+ogr2ogr   -f GeoJSON   -where "LAD11NM IN ('Hartlepool')"   wards.json   CMWD_2011_EW_BGC.shp
+ogr2ogr   -f GeoJSON   -lco COORDINATE_PRECISION=5 -simplify 0.001   wards.json   newCoords.shp -clipsrc -0.51035 51.286839 0.33403 51.692322
+topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/ukWards.json /Users/simon/Documents/CodeRepos/geouk/javascript/wards.json /Users/simon/Documents/CodeRepos/geouk/javascript/places.json --id-property CMWD11CD --properties name=CMWD11NM

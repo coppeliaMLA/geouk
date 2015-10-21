@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+  @import url(//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.css);
+  #map {
+    width: 1000px;
+    height: 1000px;
+  }
+
+  .ward {
+    fill: white;
+    opacity: 0.7;
+  }
+
+  .q0-9 {
+    fill: rgb(247, 251, 255);
+  }
+
+  .q1-9 {
+    fill: rgb(222, 235, 247);
+  }
+
+  .q2-9 {
+    fill: rgb(198, 219, 239);
+  }
+
+  .q3-9 {
+    fill: rgb(158, 202, 225);
+  }
+
+  .q4-9 {
+    fill: rgb(107, 174, 214);
+  }
+
+  .q5-9 {
+    fill: rgb(66, 146, 198);
+  }
+
+  .q6-9 {
+    fill: rgb(33, 113, 181);
+  }
+
+  .q7-9 {
+    fill: rgb(8, 81, 156);
+  }
+
+  .q8-9 {
+    fill: rgb(8, 48, 107);
+  }
+</style>
+
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
+  <p id="map"></p>
+  <script>
+
+    //Set up map (in the array sense) to hold ward data
+    var by_id = d3.map();
+
+    //Create a new leaflet map
+    var map = new L.Map("map", {
+        center: [51.5, 0.12],
+        zoom: 8
+      })
+      .addLayer(new L.TileLayer("http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"));
+
+    //Line up svg on leaflet panle
+    var svg = d3.select(map.getPanes().overlayPane).append("svg"),
+      g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+    //Set up the scales
+    var quantize = d3.scale.quantize()
+      .domain([0, 0.09])
+      .range(d3.range(9).map(function(i) {
+        return "q" + i + "-9";
+      }));
+
+    //Set up the queue
+    queue()
+      .defer(d3.json, "data/open/ukWards.json")
+      .defer(d3.csv, "data/trussell/fedPerHead.csv", function(d) {
+        by_id.set(d.cm_ward_code, +d.value);
+      })
+      .await(ready);
+
+    //Execute once all data sets are loaded
+    function ready(error, uk) {
+      if (error) throw error;
+
+      //Function for aligning co-ords sys of leaflet with d3
+      var transform = d3.geo.transform({
+          point: projectPoint
+        }),
+        path = d3.geo.path().projection(transform);
+
+      //Convert the ward json objects
+      var wards = topojson.feature(uk, uk.objects.wards);
+
+      //Add the ward shapes
+      var feature = g.selectAll("path")
+        .data(wards.features)
+        .enter().append("path")
+        .attr("class", function(d) {
+          if (by_id.get(d.id)) {
+            return "ward "+ quantize(by_id.get(d.id));
+          } else {
+            return ("ward");
+          }
+
+        });
+
+      map.on("viewreset", reset);
+      reset();
+
+      // Reposition the SVG to cover the features.
+      function reset() {
+        var bounds = path.bounds(wards),
+          topLeft = bounds[0],
+          bottomRight = bounds[1];
+
+        svg.attr("width", bottomRight[0] - topLeft[0])
+          .attr("height", bottomRight[1] - topLeft[1])
+          .style("left", topLeft[0] + "px")
+          .style("top", topLeft[1] + "px");
+
+        g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
+        feature.attr("d", path);
+      }
+
+      // Use Leaflet to implement a D3 geometric transformation.
+      function projectPoint(x, y) {
+        var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+        this.stream.point(point.x, point.y);
+      }
+
+    };
+  </script>
+
+</body>

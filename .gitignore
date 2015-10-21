@@ -1,4 +1,6 @@
 *.DS_Store
+shapefiles/
+javascript/data/trussell/
 geoukr/.RData
 geoukr/.Rhistory
 .Rproj.user

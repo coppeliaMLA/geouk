@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+  .background {
+    fill: none;
+    pointer-events: all;
+  }
+
+  .ward {
+    fill: white;
+  }
+
+  .q0-9 {
+    fill: rgb(247, 251, 255);
+  }
+
+  .q1-9 {
+    fill: rgb(222, 235, 247);
+  }
+
+  .q2-9 {
+    fill: rgb(198, 219, 239);
+  }
+
+  .q3-9 {
+    fill: rgb(158, 202, 225);
+  }
+
+  .q4-9 {
+    fill: rgb(107, 174, 214);
+  }
+
+  .q5-9 {
+    fill: rgb(66, 146, 198);
+  }
+
+  .q6-9 {
+    fill: rgb(33, 113, 181);
+  }
+
+  .q7-9 {
+    fill: rgb(8, 81, 156);
+  }
+
+  .q8-9 {
+    fill: rgb(8, 48, 107);
+  }
+
+  .place-label {
+    font-family: sans-serif;
+    font-size: 8px;
+  }
+
+
+
+</style>
+
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
+  <script>
+    //Set up map
+
+    var by_id = d3.map();
+
+    //Set up the svg
+    var width = 1000,
+      height = 1000
+    active = d3.select(null);
+
+    var svg = d3.select("body").append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .on("click", stopped, true);
+
+    svg.append("rect")
+      .attr("class", "background")
+      .attr("width", width)
+      .attr("height", height)
+      .on("click", reset);
+
+    //Set up projections and paths
+    var projection = d3.geo.albers()
+      .center([0, 55.4])
+      .rotate([4.4, 0])
+      .parallels([50, 60])
+      .scale(5000)
+      .translate([width / 2, height / 2]);
+
+    var path = d3.geo.path()
+      .projection(projection);
+
+    //Set up the scales
+
+    var quantize = d3.scale.quantize()
+      .domain([0, .15])
+      .range(d3.range(9).map(function(i) {
+        return "q" + i + "-9";
+      }));
+
+    //Set up zoom
+    var zoom = d3.behavior.zoom()
+      .translate([0, 0])
+      .scale(1)
+      .scaleExtent([1, 8])
+      .on("zoom", zoomed);
+
+    //Create a group to be zoomed
+    var g = svg.append("g");
+
+    svg.call(zoom)
+      .call(zoom.event);
+
+    //Set up the queue
+    queue()
+      .defer(d3.json, "ukWards.json")
+      .defer(d3.csv, "fedPerHead.csv", function(d) {
+        by_id.set(d.cm_ward_code, +d.value);
+      })
+      .await(ready);
+
+    function ready(error, uk) {
+      if (error) throw error;
+
+      var wards = topojson.feature(uk, uk.objects.wards);
+
+      g.append("path")
+        .datum(wards)
+        .attr("d", path);
+
+      g.selectAll(".ward")
+        .data(topojson.feature(uk, uk.objects.wards).features)
+        .enter().append("path")
+        .attr("class", function(d) {
+          if (by_id.get(d.id)) {
+            return quantize(by_id.get(d.id));
+          } else {
+            return ("ward");
+          }
+
+        })
+        .attr("d", path)
+        .on("click", clicked);
+
+      /*
+
+      var location_point = d3.geo.path()
+             .projection(projection)
+             .pointRadius(1);
+
+      g.append("path")
+        .datum(topojson.feature(uk, uk.objects.places))
+        .attr("d", location_point)
+        .attr("class", "place");
+
+      g.selectAll(".place-label")
+        .data(topojson.feature(uk, uk.objects.places).features)
+        .enter().append("text")
+        .attr("class", "place-label")
+        .attr("transform", function(d) {
+          return "translate(" + projection(d.geometry.coordinates) + ")";
+        })
+        .attr("dy", ".35em")
+        .text(function(d) {
+          return d.properties.name;
+        });
+
+
+      g.selectAll(".place-label")
+        .data(topojson.feature(uk, uk.objects.wards).features)
+        .enter().append("text")
+        .attr("class", "place-label")
+        .attr("transform", function(d) {
+          return "translate(" + path.centroid(d) + ")";
+        })
+        .attr("dy", ".35em")
+        .text(function(d) {
+          return d.properties.name;
+        });
+        */
+
+    };
+
+    function clicked(d) {
+      if (active.node() === this) return reset();
+      active.classed("active", false);
+      active = d3.select(this).classed("active", true);
+
+      var bounds = path.bounds(d),
+        dx = bounds[1][0] - bounds[0][0],
+        dy = bounds[1][1] - bounds[0][1],
+        x = (bounds[0][0] + bounds[1][0]) / 2,
+        y = (bounds[0][1] + bounds[1][1]) / 2,
+        scale = .9 / Math.max(dx / width, dy / height),
+        translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+      svg.transition()
+        .duration(750)
+        .call(zoom.translate(translate).scale(scale).event);
+    }
+
+    function reset() {
+      active.classed("active", false);
+      active = d3.select(null);
+
+      svg.transition()
+        .duration(750)
+        .call(zoom.translate([0, 0]).scale(1).event);
+    }
+
+    function zoomed() {
+      g.style("stroke-width", 1.5 / d3.event.scale + "px");
+      g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    }
+
+    // If the drag behavior prevents the default click,
+    // also stop propagation so we don’t click-to-zoom.
+    function stopped() {
+      if (d3.event.defaultPrevented) d3.event.stopPropagation();
+    }
+
+
+    d3.select(self.frameElement).style("height", height + "px");
+  </script>
+
+</body>
