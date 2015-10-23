@@ -3,84 +3,73 @@
 <style>
   @import url(//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.css);
   #map {
-    width: 1000px;
-    height: 1000px;
+    width: 900px;
+    height: 900px;
   }
 
-  .foodbank{
+  #chart_container {
+    width: 900px;
+    height: 900px;
+    float: left;
+  }
+
+  #side_panel {
+    width: 180px;
+    height: 220px;
+    float: left;
+    padding: 20px;
+  }
+
+  body {
+    font: 10px sans-serif;
+  }
+
+  text {
+    font: 10px sans-serif;
+  }
+
+  h1 {
+    font: 12px sans-serif;
+    margin-bottom: 5px;
+    margin-top: 15px;
+  }
+
+  .foodbank {
     fill: #FB6A4A;
   }
 
   .ward {
-    fill: white;
     opacity: 0.7;
   }
 
-  .q0-9 {
-    fill: rgb(247, 251, 255);
-  }
-
-  .q1-9 {
-    fill: rgb(222, 235, 247);
-  }
-
-  .q2-9 {
-    fill: rgb(198, 219, 239);
-  }
-
-  .q3-9 {
-    fill: rgb(158, 202, 225);
-  }
-
-  .q4-9 {
-    fill: rgb(107, 174, 214);
-  }
-
-  .q5-9 {
-    fill: rgb(66, 146, 198);
-  }
-
-  .q6-9 {
-    fill: rgb(33, 113, 181);
-  }
-
-  .q7-9 {
-    fill: rgb(8, 81, 156);
-  }
-
-  .q8-9 {
-    fill: rgb(8, 48, 107);
-  }
-
   .d3-tip {
-      font: 10px sans-serif;
-      line-height: 130%;
-      padding: 12px;
-      background: rgba(0, 0, 0, 0.8);
-      color: #FB6A4A;
-      border-radius: 2px;
+    font: 10px sans-serif;
+    line-height: 130%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #FB6A4A;
+    border-radius: 2px;
   }
   /* Creates a small triangle extender for the tooltip */
 
   .d3-tip:after {
-      box-sizing: border-box;
-      display: inline;
-      font-size: 10px;
-      width: 100%;
-      line-height: 1;
-      color: #000;
-      content: "\25BC";
-      position: absolute;
-      text-align: center;
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: #000;
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
   }
   /* Style northward tooltips differently */
 
   .d3-tip.n:after {
-      margin: -1px 0 0 0;
-      top: 100%;
-      left: 0;
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
   }
-
 </style>
 
 <body>
@@ -89,10 +78,88 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
   <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-  <p id="map"></p>
+  <script src="http://d3js.org/colorbrewer.v1.min.js"></script>
+  <script src="js/jquery-1.11.3.min.js"></script>
+  <script src="js/icheck.min.js"></script>
+  <link href="js/square/blue.css" rel="stylesheet">
+
+  <div id="chart_container">
+    <p id="map"></p>
+  </div>
+
+  <div id="side_panel">
+    <div id="Heat map">
+      <h1>Heat map</h1>
+      <form>
+        <input type="radio" name="heat_map" onclick="change_heat_map()" value="actual_use" checked> Actual use
+        <br>
+        <input type="radio" name="heat_map" onclick="change_heat_map()" value="predicted_need"> Predicted need
+        <br>
+        <input type="radio" name="heat_map" onclick="change_heat_map()" value="crisis"> Crisis
+        <br>
+        <h1>Select the crisis type</h1>
+        <br>
+        <select id="crisis">
+          <option value="benefit_changes">Benefit changes</option>
+          <option value="benefit_delays" selected="selected">Benefit delays</option>
+          <option value="child_holiday_meals">Child holiday meals</option>
+          <option value="debt">Debt</option>
+          <option value="delayed_wages">Delayed wages</option>
+          <option value="domestic_violence">Domestic violence</option>
+          <option value="homeless">Homeless</option>
+          <option value="low_income">Low income</option>
+          <option value="other">Other</option>
+          <option value="refused_advance">Refused Advance</option>
+          <option value="sickness">Sickness</option>
+          <option value="unemployed">Unemployed</option>
+        </select>
+
+        <br>
+        <br> Opacity
+        <br>
+        <br>
+        <input type="range" name="opacity_slider" value="7" min="0" max="10">
+      </form>
+    </div>
+
+    <div id="foodbanks">
+      <h1>Foodbanks</h1>
+      <form>
+        <input type="checkbox" name="visible" checked> Visible
+        <br>
+      </form>
+    </div>
+
+    <div id="Reach">
+      <h1>Reach (not yet available!)</h1>
+      <form>
+        <input type="radio" name="social_grade" onclick="update_chart()" value="ABC1" checked> Actual customers
+        <br>
+        <input type="radio" name="social_grade" onclick="update_chart()" value="C2DE"> Drive time
+        <br>
+        <input type="radio" name="social_grade" onclick="update_chart()" value="C2DE"> Walking
+        <br>
+        <input type="radio" name="social_grade" onclick="update_chart()" value="C2DE"> Transit
+        <br>
+        <input type="radio" name="social_grade" onclick="update_chart()" value="C2DE"> All
+      </form>
+    </div>
+    <h1>Legend</h1>
+    <br> Number (since January 2014) per hundred of the population:
+    <div id="legend">
+    </div>
+
+  </div>
+
   <script>
-    //Set up map (in the array sense) to hold ward data
-    var by_id = d3.map();
+    //JQuery for the radio buttons
+    $(document).ready(function() {
+      $('input').iCheck({
+        checkboxClass: 'icheckbox_square-blue',
+        radioClass: 'iradio_square-blue',
+        increaseArea: '10%' // optional
+      });
+    });
 
     //Create a new leaflet map
     var map = new L.Map("map", {
@@ -107,20 +174,54 @@
 
     //Set up the tool tip
     var tip = d3.tip()
-        .attr('class', 'd3-tip')
-        .offset([0, 0])
-        .html(function(d, i) {
-          return (d.properties.name);
-        });
+      .attr('class', 'd3-tip')
+      .offset([0, 0])
+      .html(function(d, i) {
+        return (d.properties.name);
+      });
 
     g.call(tip);
 
     //Set up the scales
     var quantize = d3.scale.quantize()
-      .domain([0, 0.09])
-      .range(d3.range(9).map(function(i) {
-        return "q" + i + "-9";
-      }));
+      .domain([0, 0.0476])
+      .range(colorbrewer.Blues[9]);
+
+    //Add legend
+
+    var legend = d3.select("#legend")
+      .append("svg")
+      .attr("class", "legend")
+      .attr("width", 180)
+      .attr("height", 400);
+
+    legend_item = legend.selectAll("legend_item")
+      .data(quantize.range())
+      .enter()
+      .append("g")
+      .attr("class", "legend_item")
+      .attr("transform", function(d, i) {
+        return ("translate(" + 4 + "," + (10 + (i * 30)) + ")")
+      });
+
+    legend_item.append("circle")
+      .attr("cx", 10)
+      .attr("cy", 10)
+      .attr("r", 10)
+      .attr("fill", function(d) {
+        return d
+      });
+
+    var formatter = d3.format(".2n");
+
+    legend_item.append("text")
+      .attr("class", "legend_text")
+      .attr("x", 30)
+      .attr("y", 15)
+      .text(function(d) {
+        var r = quantize.invertExtent(d);
+        return formatter(r[0] * 100);
+      });
 
     //Set up an array to hold the foobank data
     var foodbank_data = new Array();
@@ -131,9 +232,21 @@
       .defer(d3.json, "data/open/ukWards.json")
       .defer(d3.csv, "data/trussell/predActual.csv", function(d) {
         ward_data.push({
-          cm_ward_code: d. cm_ward_code,
-          predicted_need: d.predicted,
-          actual_use:  d.actual
+          cm_ward_code: d.cm_ward_code,
+          predicted_need: +d.predicted,
+          actual_use: +d.actual,
+          benefit_changes: +d.BenefitChanges,
+          benefit_delays: +d.BenefitDelays,
+          child_holiday_meals: +d.ChildHolidayMeals,
+          debt: +d.Debt,
+          delayed_wages: +d.DelayedWages,
+          domestic_violence: +d.DomesticViolence,
+          homeless: +d.Homeless,
+          low_income: +d.LowIncome,
+          other: +d.Other,
+          refused_advance: +d.RefusedShortTermBenefitAdvance,
+          sickness: +d.Sickness,
+          unemployed: +d.Unemployed
         });
       })
       .defer(d3.csv, "data/trussell/foodBanks.csv", function(d) {
@@ -148,14 +261,28 @@
           }
         });
       })
-      .defer(d3.csv, "data/trussell/fedPerHead.csv", function(d) {
-        by_id.set(d.cm_ward_code, +d.value);
-      })
       .await(ready);
 
     //Execute once all data sets are loaded
     function ready(error, uk) {
       if (error) throw error;
+
+      $('input[name="heat_map"]').on('ifChecked', function() {
+        change_heat_map();
+      });
+
+      $('input[name="visible"]').on('ifChanged', function() {
+        toggle_foodbanks();
+      });
+
+      $('input[name="opacity_slider"]').on('change', function() {
+        fade_wards();
+      });
+
+      $("#crisis").change(function() {
+        change_heat_map();
+      });
+
 
       //Function for aligning co-ords sys of leaflet with d3
       var transform = d3.geo.transform({
@@ -166,27 +293,26 @@
       //Convert the ward json objects
       var wards = topojson.feature(uk, uk.objects.wards);
 
-      /*Function to search the ward data
+      //Function to search the ward data
+      function search_ward(key, attribute) {
 
-      function search_ward(key, attribute){
-
-        for ()
-
+        var found_ward = ward_data.filter(function(d) {
+          return d.cm_ward_code == key
+        });
+        if (found_ward[0] == undefined) {
+          return 0;
+        } else {
+          return (found_ward[0][attribute]);
+        }
       }
-      */
-
 
       //Add the ward shapes
       var feature = g.selectAll("path")
         .data(wards.features)
         .enter().append("path")
-        .attr("class", function(d) {
-          if (by_id.get(d.id)) {
-            return "ward " + quantize(by_id.get(d.id));
-          } else {
-            return ("ward");
-          }
-
+        .attr("class", "ward")
+        .attr("fill", function(d) {
+          return quantize(search_ward(d.id, "actual_use"));
         });
 
       //Add the foodBanks
@@ -197,17 +323,24 @@
         .enter().append("path")
         .attr("class", "foodbank")
         .on('mouseover', tip.show)
-        .on('mouseout', tip.hide);
+        .on('mouseout', function() {
+          d3.select(".d3-tip")
+            .transition()
+            .delay(3000)
+            .duration(600)
+            .style("opacity", 0)
+            .style('pointer-events', 'none')
+        });
 
 
       var location_point = d3.geo.path()
         .projection(transform)
-        .pointRadius(3.5);
+        .pointRadius(5);
 
       map.on("viewreset", reset);
       reset();
 
-      // Reposition the SVG to cover the features.
+      //Reposition the SVG to cover the features.
       function reset() {
         var bounds = path.bounds(wards),
           topLeft = bounds[0],
@@ -224,10 +357,93 @@
         foodbank_feature.attr("d", location_point);
       }
 
-      // Use Leaflet to implement a D3 geometric transformation.
+      //Use Leaflet to implement a D3 geometric transformation.
       function projectPoint(x, y) {
         var point = map.latLngToLayerPoint(new L.LatLng(y, x));
         this.stream.point(point.x, point.y);
+      }
+
+      function fade_wards() {
+
+        var new_opacity = $("input[name=opacity_slider]").val();
+        g.selectAll(".ward")
+          .style("opacity", new_opacity / 10);
+      }
+
+      //Toggle the foodbanks on and off
+      function toggle_foodbanks() {
+
+        var on_off = $("input[name=visible]:checked").val();
+
+        if (on_off === "on") {
+          g.selectAll(".foodbank")
+            .on('mouseover', tip.show)
+            .on('mouseout', function() {
+              d3.select(".d3-tip")
+                .transition()
+                .delay(3000)
+                .duration(600)
+                .style("opacity", 0)
+                .style('pointer-events', 'none')
+            })
+            .transition()
+            .duration(1000)
+            .attr("opacity", 1);
+        } else {
+          g.selectAll(".foodbank")
+            .on('mouseover', null)
+            .on('mouseout', null)
+            .transition()
+            .duration(1000)
+            .attr("opacity", 0);
+        }
+
+
+      }
+
+      //Change the heat map data
+      function change_heat_map() {
+        var attribute = $("input[name=heat_map]:checked").val();
+        var crisis = $("#crisis").val();
+        if (attribute == "off") {
+          g.selectAll(".ward")
+            .transition()
+            .duration(1000)
+            .style("opacity", 0);
+
+        } else {
+
+          if (attribute == "crisis") {
+            attribute = crisis;
+          }
+
+          //Readjust the quartile Function
+          var attr_data = ward_data.map(function(d) {
+            return d[attribute]
+          });
+          attr_data.sort(d3.ascending);
+          var max_domain = d3.quantile(attr_data, 0.85);
+          quantize = d3.scale.quantize()
+            .domain([0, max_domain])
+            .range(colorbrewer.Blues[9]);
+
+          //Rebuild the legend
+
+          legend.selectAll(".legend_text")
+            .text(function(d) {
+              var r = quantize.invertExtent(d);
+              return formatter(r[0] * 100);
+            });
+
+          g.selectAll(".ward")
+            .transition()
+            .delay(1000)
+            .duration(2000)
+            .style("opacity", 0.7)
+            .attr("fill", function(d) {
+              return quantize(search_ward(d.id, attribute));
+            });
+        }
       }
 
     };
