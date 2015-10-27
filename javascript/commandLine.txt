@@ -6,9 +6,17 @@ ogr2ogr \
 
 ogr2ogr newCoords.shp CMWD_2011_EW_BGC.shp -t_srs "+proj=longlat +ellps=WGS84 +no_defs +towgs84=0,0,0"
 rm wards.json
-ogr2ogr   -f GeoJSON   -lco COORDINATE_PRECISION=5 -simplify 0.001   wards.json   newCoords.shp
-cp wards.json /Users/simon/Documents/CodeRepos/geouk/javascript/wards.json
-topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/ukWards.json /Users/simon/Documents/CodeRepos/geouk/javascript/wards.json /Users/simon/Documents/CodeRepos/geouk/javascript/places.json --id-property CMWD11CD --properties name=NAME
+ogr2ogr   -f GeoJSON   -lco COORDINATE_PRECISION=5 -simplify 0.001   /Users/simon/Documents/CodeRepos/geouk/javascript/data/open/wards.json   /Users/simon/Documents/CodeRepos/geouk/shapeFiles/ukWards/newCoords.shp
+topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/ukWards.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/open/wards.json  --id-property CMWD11CD --properties name=NAME
+
+#Now do reach
+ogr2ogr   -f GeoJSON   -lco COORDINATE_PRECISION=5  /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/reach.json  /Users/simon/Documents/CodeRepos/trussell/trussellData/chull/reach.shp
+#topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/reachTopo.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/reach.json
+#topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/ukWards.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/open/wards.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/reach.json --id-property CMWD11CD --properties name=NAME
+
+topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/ukWards.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/reach.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/open/wards.json --id-property CMWD11CD --properties name=NAME -q 1e5
+
+
 
 
 #Variants

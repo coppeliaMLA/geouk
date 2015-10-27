@@ -42,6 +42,11 @@
     opacity: 0.7;
   }
 
+  .reach {
+    fill: #FB6A4A;
+    opacity: 0.7;
+  }
+
   .d3-tip {
     font: 10px sans-serif;
     line-height: 130%;
@@ -182,6 +187,10 @@
 
     g.call(tip);
 
+    //Some global variables
+    var reach_on = true;
+    var reach_shapes;
+
     //Set up the scales
     var quantize = d3.scale.quantize()
       .domain([0, 0.0476])
@@ -229,7 +238,7 @@
 
     //Set up the queue
     queue()
-      .defer(d3.json, "data/open/ukWards.json")
+      .defer(d3.json, "data/trussell/ukWards.json")
       .defer(d3.csv, "data/trussell/predActual.csv", function(d) {
         ward_data.push({
           cm_ward_code: d.cm_ward_code,
@@ -306,6 +315,7 @@
         }
       }
 
+
       //Add the ward shapes
       var feature = g.selectAll("path")
         .data(wards.features)
@@ -315,14 +325,14 @@
           return quantize(search_ward(d.id, "actual_use"));
         });
 
-      //Add the foodBanks
-      var foodbanks = foodbank_data;
-
       var foodbank_feature = g.selectAll(".foodbank")
-        .data(foodbanks)
+        .data(foodbank_data)
         .enter().append("path")
         .attr("class", "foodbank")
-        .on('mouseover', tip.show)
+        .on('mouseover', function(d) {
+          tip.show(d)
+          show_actual_reach(d.properties.name);
+        })
         .on('mouseout', function() {
           d3.select(".d3-tip")
             .transition()
@@ -332,6 +342,21 @@
             .style('pointer-events', 'none')
         });
 
+      //Add the foodbank reach
+
+      var reach = topojson.feature(uk, uk.objects.reach);
+
+      console.log(reach);
+      console.log(wards);
+
+      /*Add the reach shapes
+      var reach_shapes = g.selectAll(".reach")
+        .data(reach.features)
+        .enter().append("path")
+        .attr("class", "reach");
+        */
+
+      show_actual_reach("Barking");
 
       var location_point = d3.geo.path()
         .projection(transform)
@@ -354,6 +379,9 @@
         g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
 
         feature.attr("d", path);
+        if (reach_on === true) {
+          reach_shapes.attr("d", path);
+        }
         foodbank_feature.attr("d", location_point);
       }
 
@@ -397,6 +425,23 @@
             .duration(1000)
             .attr("opacity", 0);
         }
+
+
+      }
+
+      //Show the actual reach of a foodbank
+      function show_actual_reach(foodbank) {
+        reach_on = true;
+        var found_fb = reach.features.filter(function(d) {
+          return d.id == foodbank.substring(0, foodbank.length-9);
+        });
+        console.log(found_fb);
+        reach_shapes = g.selectAll(".reach")
+          .data(found_fb)
+          .enter()
+          .append("path")
+          .attr("class", "reach")
+          .attr("d", path);
 
 
       }
