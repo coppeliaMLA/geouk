@@ -10,11 +10,12 @@ ogr2ogr   -f GeoJSON   -lco COORDINATE_PRECISION=5 -simplify 0.001   /Users/simo
 topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/ukWards.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/open/wards.json  --id-property CMWD11CD --properties name=NAME
 
 #Now do reach
+rm /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/reach.json
 ogr2ogr   -f GeoJSON   -lco COORDINATE_PRECISION=5  /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/reach.json  /Users/simon/Documents/CodeRepos/trussell/trussellData/chull/reach.shp
 #topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/reachTopo.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/reach.json
 #topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/ukWards.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/open/wards.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/reach.json --id-property CMWD11CD --properties name=NAME
 
-topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/ukWards.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/reach.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/open/wards.json --id-property CMWD11CD --properties name=NAME -q 1e5
+topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/ukWards.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/reach.json --id-property ID /Users/simon/Documents/CodeRepos/geouk/javascript/data/open/wards.json --id-property CMWD11CD --properties name=NAME -q 1e5
 
 
 

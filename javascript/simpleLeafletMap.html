@@ -35,11 +35,21 @@
   }
 
   .foodbank {
+    stroke: #000;
+    stroke-width: 10px;
+    stroke-opacity: 0;
     fill: #FB6A4A;
+  }
+
+  .foodbank:hover {
+    fill: #cc0000;
+    stroke: #cc0000;
+    stroke-opacity: 1;
   }
 
   .ward {
     opacity: 0.7;
+    pointer-events: none;
   }
 
   .reach {
@@ -188,7 +198,8 @@
     g.call(tip);
 
     //Some global variables
-    var reach_on = true;
+    var reach_on = false;
+    var reach_memory;
     var reach_shapes;
 
     //Set up the scales
@@ -315,7 +326,6 @@
         }
       }
 
-
       //Add the ward shapes
       var feature = g.selectAll("path")
         .data(wards.features)
@@ -325,13 +335,16 @@
           return quantize(search_ward(d.id, "actual_use"));
         });
 
+      //Add the foodbank shapes
       var foodbank_feature = g.selectAll(".foodbank")
         .data(foodbank_data)
         .enter().append("path")
         .attr("class", "foodbank")
+        .on('click', function(d) {
+          show_actual_reach(d.properties.name);
+        })
         .on('mouseover', function(d) {
           tip.show(d)
-          show_actual_reach(d.properties.name);
         })
         .on('mouseout', function() {
           d3.select(".d3-tip")
@@ -343,20 +356,7 @@
         });
 
       //Add the foodbank reach
-
       var reach = topojson.feature(uk, uk.objects.reach);
-
-      console.log(reach);
-      console.log(wards);
-
-      /*Add the reach shapes
-      var reach_shapes = g.selectAll(".reach")
-        .data(reach.features)
-        .enter().append("path")
-        .attr("class", "reach");
-        */
-
-      show_actual_reach("Barking");
 
       var location_point = d3.geo.path()
         .projection(transform)
@@ -405,7 +405,12 @@
 
         if (on_off === "on") {
           g.selectAll(".foodbank")
-            .on('mouseover', tip.show)
+            .on('click', function(d) {
+              show_actual_reach(d.properties.name);
+            })
+            .on('mouseover', function(d) {
+              tip.show(d)
+            })
             .on('mouseout', function() {
               d3.select(".d3-tip")
                 .transition()
@@ -421,6 +426,7 @@
           g.selectAll(".foodbank")
             .on('mouseover', null)
             .on('mouseout', null)
+            .on('click', null)
             .transition()
             .duration(1000)
             .attr("opacity", 0);
@@ -431,19 +437,27 @@
 
       //Show the actual reach of a foodbank
       function show_actual_reach(foodbank) {
-        reach_on = true;
-        var found_fb = reach.features.filter(function(d) {
-          return d.id == foodbank.substring(0, foodbank.length-9);
-        });
-        console.log(found_fb);
-        reach_shapes = g.selectAll(".reach")
-          .data(found_fb)
-          .enter()
-          .append("path")
-          .attr("class", "reach")
-          .attr("d", path);
-
-
+        if (reach_on === false | foodbank != reach_memory) {
+          var found_fb = reach.features.filter(function(d) {
+            return d.id == foodbank;
+          });
+          if (found_fb.length > 0) {
+            g.selectAll(".reach").remove();
+            reach_on = true;
+            reach_memory = foodbank;
+            reach_shapes = g.append('path')
+              .datum(found_fb[0])
+              .attr("class", "reach")
+              .on("click", function() {
+                reach_on = false;
+                g.selectAll(".reach").remove();
+              })
+              .attr("d", path);
+          }
+        } else {
+          reach_on = false;
+          g.selectAll(".reach").remove();
+        }
       }
 
       //Change the heat map data
