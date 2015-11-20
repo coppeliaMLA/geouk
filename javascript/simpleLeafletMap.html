@@ -124,7 +124,6 @@
           <option value="homeless">Homeless</option>
           <option value="low_income">Low income</option>
           <option value="other">Other</option>
-          <option value="refused_advance">Refused Advance</option>
           <option value="sickness">Sickness</option>
           <option value="unemployed">Unemployed</option>
         </select>
@@ -146,21 +145,21 @@
     </div>
 
     <div id="Reach">
-      <h1>Reach (not yet available!)</h1>
+      <h1>Reach</h1>
+      (At the moment we only have actual customers)
+      <br>
       <form>
-        <input type="radio" name="social_grade" onclick="update_chart()" value="ABC1" checked> Actual customers
+        <input type="radio" name="reach_type" onclick="update_reach()" value="actual" checked> Actual customers
         <br>
-        <input type="radio" name="social_grade" onclick="update_chart()" value="C2DE"> Drive time
+        <input type="radio" name="reach_type" onclick="update_reach()" value="drive_time"> Drive time
         <br>
-        <input type="radio" name="social_grade" onclick="update_chart()" value="C2DE"> Walking
+        <input type="radio" name="reach_type" onclick="update_reach()" value="walking_time"> Walking
         <br>
-        <input type="radio" name="social_grade" onclick="update_chart()" value="C2DE"> Transit
-        <br>
-        <input type="radio" name="social_grade" onclick="update_chart()" value="C2DE"> All
+        <input type="radio" name="reach_type" onclick="update_reach()" value="transit_time"> Transit
       </form>
     </div>
     <h1>Legend</h1>
-    <br> Number (since January 2014) per hundred of the population:
+    <br> Explanation goes here
     <div id="legend">
     </div>
 
@@ -243,7 +242,7 @@
         return formatter(r[0] * 100);
       });
 
-    //Set up an array to hold the foobank data
+    //Set up an array to hold the foodbank data
     var foodbank_data = new Array();
     var ward_data = new Array();
 
@@ -289,6 +288,10 @@
 
       $('input[name="heat_map"]').on('ifChecked', function() {
         change_heat_map();
+      });
+
+      $('input[name="reach_type"]').on('ifChecked', function() {
+        update_reach();
       });
 
       $('input[name="visible"]').on('ifChanged', function() {
@@ -356,7 +359,12 @@
         });
 
       //Add the foodbank reach
-      var reach = topojson.feature(uk, uk.objects.reach);
+      var actual = topojson.feature(uk, uk.objects.reach),
+      drive_time = topojson.feature(uk, uk.objects.driveTime),
+      walking_time = topojson.feature(uk, uk.objects.walkingTime)
+      transit_time = topojson.feature(uk, uk.objects.transitTime);
+
+      var reach = actual;
 
       var location_point = d3.geo.path()
         .projection(transform)
@@ -437,6 +445,7 @@
 
       //Show the actual reach of a foodbank
       function show_actual_reach(foodbank) {
+
         if (reach_on === false | foodbank != reach_memory) {
           var found_fb = reach.features.filter(function(d) {
             return d.id == foodbank;
@@ -445,6 +454,7 @@
             g.selectAll(".reach").remove();
             reach_on = true;
             reach_memory = foodbank;
+            console.log(found_fb[0]);
             reach_shapes = g.append('path')
               .datum(found_fb[0])
               .attr("class", "reach")
@@ -458,6 +468,18 @@
           reach_on = false;
           g.selectAll(".reach").remove();
         }
+      }
+
+      //Update the reach
+
+      function update_reach() {
+        var reach_type = $("input[name=reach_type]:checked").val();
+        console.log(reach_type);
+          if (reach_type ==="drive_time") {reach = drive_time;}
+          else if (reach_type ==="walking_time") {reach = walking_time;}
+          else if (reach_type ==="transit_time") {reach = transit_time;}
+          else {reach = actual;}
+          console.log(reach);
       }
 
       //Change the heat map data

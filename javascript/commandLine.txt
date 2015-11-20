@@ -24,3 +24,15 @@ topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/ukWa
 ogr2ogr   -f GeoJSON   -where "LAD11NM IN ('Hartlepool')"   wards.json   CMWD_2011_EW_BGC.shp
 ogr2ogr   -f GeoJSON   -lco COORDINATE_PRECISION=5 -simplify 0.001   wards.json   newCoords.shp -clipsrc -0.51035 51.286839 0.33403 51.692322
 topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/ukWards.json /Users/simon/Documents/CodeRepos/geouk/javascript/wards.json /Users/simon/Documents/CodeRepos/geouk/javascript/places.json --id-property CMWD11CD --properties name=CMWD11NM
+
+
+ogr2ogr   -f GeoJSON   -lco COORDINATE_PRECISION=5 -simplify 0.001   /Users/simon/Documents/CodeRepos/geouk/javascript/data/open/wards.json   /Users/simon/Documents/CodeRepos/geouk/shapeFiles/ukWards/newCoords.shp
+
+
+#Convert drive time shapes
+
+ogr2ogr   -f GeoJSON   -lco COORDINATE_PRECISION=5  /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/driveTime.json  /Users/simon/Documents/CodeRepos/trussell/trussellData/journeytime/driving_reach.shp
+ogr2ogr   -f GeoJSON   -lco COORDINATE_PRECISION=5  /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/transitTime.json  /Users/simon/Documents/CodeRepos/trussell/trussellData/journeytime/trasit_reach.shp
+ogr2ogr   -f GeoJSON   -lco COORDINATE_PRECISION=5  /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/walkingTime.json  /Users/simon/Documents/CodeRepos/trussell/trussellData/journeytime/walking_reach.shp
+
+topojson -o /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/ukWards.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/walkingTime.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/transitTime.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/driveTime.json /Users/simon/Documents/CodeRepos/geouk/javascript/data/trussell/reach.json --id-property ID /Users/simon/Documents/CodeRepos/geouk/javascript/data/open/wards.json --id-property CMWD11CD --properties name=NAME -q 1e5
